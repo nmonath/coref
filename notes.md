@@ -212,3 +212,10 @@ sh bin/launch_predict.sh configs/mixed_clustering2_0.40_test.json $partition 320
 # single machine
 sh bin/run_predict.sh configs/mixed_clustering2_0.40_test.json $partition 32000
 ```
+
+Score test:
+```
+./scorer.pl  all ../data/ecb/gold/test_mixed_topic_level.conll ../models/pairwise_scorer2/topic_level_predicted_mentions/mixed_0.40/test_mixed_average_0.5_model_5_topic_level.conll > ../models/pairwise_scorer2/topic_level_predicted_mentions/mixed_0.40/test_mixed_average_0.5_model_5_topic_level.conll.score
+```
+
+```bash

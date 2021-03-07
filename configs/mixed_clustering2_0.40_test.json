@@ -24,7 +24,7 @@
   "data_folder": "data/ecb/mentions",
   "save_path": "models/pairwise_scorer2/topic_level_predicted_mentions/mixed_0.40",
   "model_path" : "models/pairwise_scorer2/topic_level_predicted_mentions/mixed_0.40",
-  "model_num": 5,
+  "model_num": 3,
 
   "threshold": 0.5,
   "linkage_type": "average"
