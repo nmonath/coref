@@ -31,5 +31,5 @@
   "data_folder": "data/ecb/mentions",
   "span_repr_path": "models/span_scorers1_0.40/mixed_span_repr_0",
   "span_scorer_path": "models/span_scorers1_0.40/mixed_span_scorer_0",
-  "model_path": "models/pairwise_scorer1/topic_level_predicted_mentions/mixed_0.40/"
+  "model_path": "models/pairwise_scorer1/topic_level_gold_mentions/mixed_0.40/"
 }
