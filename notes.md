@@ -39,3 +39,11 @@ Scoring test:
 
 ## Gold Mentions & Gold Topics
 
+Pairwise:
+
+```bash
+# slurm
+sh bin/launch_pairwise.sh configs/gold_mixed_pairwise1_0.40.json $partition 32000
+# single machine
+sh bin/launch_pairwise.sh configs/gold_mixed_pairwise1_0.40.json
+```
