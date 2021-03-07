@@ -181,16 +181,34 @@ sh bin/launch_pairwise.sh configs/mixed_pairwise1_0.40.json
 Tuning threshold:
 ```
 # slurm
-sh bin/launch_tuned_threshold.sh configs/gold_mixed_clustering2_0.40.json $partition 32000
+sh bin/launch_tuned_threshold.sh configs/mixed_clustering2_0.40.json $partition 32000
 # single machine
-sh bin/run_tuned_threshold.sh configs/gold_mixed_clustering2_0.40.json
+sh bin/run_tuned_threshold.sh configs/mixed_clustering2_0.40.json
 ```
 
 ```bash
 # slurm
-sh bin/launch_find_best_model.sh models/pairwise_scorer2/topic_level_gold_mentions/mixed_0.40 mixed $partition 32000
+sh bin/launch_find_best_model.sh models/pairwise_scorer2/topic_level_predicted_mentions/mixed_0.40 mixed $partition 32000
 # single machine
-sh bin/run_find_best_model.sh models/pairwise_scorer2/topic_level_gold_mentions/mixed_0.40 mixed
+sh bin/run_find_best_model.sh models/pairwise_scorer2/topic_level_predicted_mentions/mixed_0.40 mixed
+```
+
+```bash
+tail -1 logs/run_scorer/mixed_0.40/2021-03-07-16-51-09-190845411/log.log
+('model_3_dev_mixed_average_0.5_topic_level.conll', 45.94354329666605)
+```
+
+Set this in [configs/mixed_clustering2_0.40_test.json](configs/mixed_clustering2_0.40_test.json)
+```
+  "model_num": 3,
+  "threshold": 0.5
 ```
 
 
+Running test:
+```bash
+# slurm
+sh bin/launch_predict.sh configs/mixed_clustering2_0.40_test.json $partition 32000
+# single machine
+sh bin/run_predict.sh configs/mixed_clustering2_0.40_test.json $partition 32000
+```
