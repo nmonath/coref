@@ -154,3 +154,43 @@ Coreference:
 Coreference links: Recall: (15236 / 24784) 61.47%       Precision: (15236 / 30148) 50.53%       F1: 55.47%
 Non-coreference links: Recall: (324014 / 393377) 82.36% Precision: (324014 / 460907) 70.29%     F1: 75.85%
 ```
+
+## Predicted Mentions & Gold Topics (v2)
+
+v2 Keeps `"max_mention_span": 10,` for the span_scorer step as in the original config file.
+The remaining steps use the suggested `max_mention_span` value of 20.
+
+Span scorer:
+
+```bash
+# slurm
+sh bin/launch_span_scorer.sh configs/mixed_span_scorer2_0.40.json $partition 32000
+# single machine
+sh bin/run_span_scorer.sh configs/mixed_span_scorer2_0.40.json
+```
+
+Pairwise:
+
+```bash
+# slurm
+sh bin/launch_pairwise.sh configs/mixed_pairwise1_0.40.json $partition 32000
+# single machine
+sh bin/launch_pairwise.sh configs/mixed_pairwise1_0.40.json
+```
+
+Tuning threshold:
+```
+# slurm
+sh bin/launch_tuned_threshold.sh configs/gold_mixed_clustering2_0.40.json $partition 32000
+# single machine
+sh bin/run_tuned_threshold.sh configs/gold_mixed_clustering2_0.40.json
+```
+
+```bash
+# slurm
+sh bin/launch_find_best_model.sh models/pairwise_scorer2/topic_level_gold_mentions/mixed_0.40 mixed $partition 32000
+# single machine
+sh bin/run_find_best_model.sh models/pairwise_scorer2/topic_level_gold_mentions/mixed_0.40 mixed
+```
+
+
