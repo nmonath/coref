@@ -119,12 +119,17 @@ tail -1 logs/run_scorer/mixed_0.40/2021-03-07-09-14-53-011635448/log.log
 ```
 
 
+SSet this in [configs/gold_mixed_clustering1_0.40_test.json]
+```
+  "model_num": 2,
+  "threshold": 0.6
+```
 
 
 Running test:
 ```bash
 # slurm
-sh bin/launch_predict.sh configs/mixed_clustering1_0.40_test.json $partition 32000
+sh bin/launch_predict.sh configs/gold_mixed_clustering1_0.40_test.json $partition 32000
 # single machine
-sh bin/run_predict.sh configs/mixed_clustering1_0.40_test.json $partition 32000
+sh bin/run_predict.sh configs/gold_mixed_clustering1_0.40_test.json $partition 32000
 ```
