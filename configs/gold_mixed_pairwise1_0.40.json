@@ -29,7 +29,7 @@
 
   "log_path": "logs/pairwise_scorer/",
   "data_folder": "data/ecb/mentions",
-  "span_repr_path": "models/span_scorers1_0.40/mixed_span_repr_9",
-  "span_scorer_path": "models/span_scorers1_0.40/mixed_span_scorer_9",
-  "model_path": "models/pairwise_scorer1/topic_level_predicted_mentions/mixed_0.40/span_9/"
+  "span_repr_path": "models/span_scorers1_0.40/mixed_span_repr_0",
+  "span_scorer_path": "models/span_scorers1_0.40/mixed_span_scorer_0",
+  "model_path": "models/pairwise_scorer1/topic_level_predicted_mentions/mixed_0.40/"
 }

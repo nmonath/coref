@@ -17,14 +17,18 @@ Pairwise:
 
 ```bash
 # slurm
-sh bin/launch_pairwise.sh configs/pairwise1_0.40.json $partition 32000
+sh bin/launch_pairwise.sh configs/mixed_pairwise1_0.40.json $partition 32000
 # single machine
-sh bin/launch_pairwise.sh configs/pairwise1_0.40.json
+sh bin/launch_pairwise.sh configs/mixed_pairwise1_0.40.json
 ```
 
 Tuning threshold:
-```
 
+```bash
+# slurm
+sh bin/launch_tuned_threshold.sh configs/mixed_clustering1_0.40.json $partition 32000
+# single machine
+sh bin/run_tuned_threshold configs/mixed_clustering1_0.40.json $partition 32000
 ```
 
 Running test:
