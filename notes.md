@@ -219,3 +219,19 @@ Score test:
 ```
 
 ```bash
+./scorer.pl  all ../data/ecb/gold/test_mixed_topic_level.conll ../models/pairwise_scorer2/topic_level_predicted_mentions/mixed_0.40/test_mixed_average_0.5_model_3_topic_level.conll > ../models/pairwise_scorer2/topic_level_predicted_mentions/mixed_0.40/test_mixed_average_0.5_model_3_topic_level.conll.score
+(ariecattan_coref) 18:09 gypsum ➜  reference-coreference-scorers git:(master) grep -i -e metric -e Coref ../models/pairwise_scorer2/topic_level_predicted_mentions/mixed_0.40/test_mixed_average_0.5_model_3_topic_level.conll.score
+version: 8.01 /mnt/nfs/scratch1/nmonath/coref_public/reference-coreference-scorers/lib/CorScorer.pm
+METRIC muc:
+Coreference: Recall: (1092 / 2420) 45.12%       Precision: (1092 / 1981) 55.12% F1: 49.62%
+METRIC bcub:
+Coreference: Recall: (791.63895043135 / 2800) 28.27%    Precision: (977.868435406336 / 2413) 40.52%     F1: 33.3%
+METRIC ceafm:
+Coreference: Recall: (1009 / 2800) 36.03%       Precision: (1009 / 2413) 41.81% F1: 38.71%
+METRIC ceafe:
+Coreference: Recall: (130.960664614846 / 380) 34.46%    Precision: (130.960664614846 / 432) 30.31%      F1: 32.25%
+METRIC blanc:
+Coreference:
+Coreference links: Recall: (5684 / 24784) 22.93%        Precision: (5684 / 15348) 37.03%        F1: 28.32%
+Non-coreference links: Recall: (113422 / 393377) 28.83% Precision: (113422 / 309162) 36.68%     F1: 32.28%
+```
