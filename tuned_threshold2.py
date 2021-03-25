@@ -215,6 +215,9 @@ if __name__ == '__main__':
             thresholds = np.squeeze(mkm.cluster_centers_)
             logging.info('thresholds %s ' % str(thresholds.shape))
 
+            idx = np.tril_indices(pairwise_distances.shape[0], -1)
+            pairwise_distances[idx] = pairwise_distances.T[idx]
+            np.fill_diagonal(pairwise_distances, 0)
             Z = linkage(squareform(pairwise_distances))
             logging.info('Z %s ' % str(Z.shape))
 
