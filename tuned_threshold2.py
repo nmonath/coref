@@ -240,9 +240,10 @@ if __name__ == '__main__':
 
         all_thresholds = np.vstack(all_thresh)
         num_thresholds_to_pick = 50
-        mkm = MiniBatchKMeans(n_clusters=num_thresholds_to_pick)
-        mkm.fit(all_thresholds)
-        thresholds = np.squeeze(mkm.cluster_centers_)
+        # mkm = MiniBatchKMeans(n_clusters=num_thresholds_to_pick)
+        # mkm.fit(all_thresholds)
+        # thresholds = np.squeeze(mkm.cluster_centers_)
+        thresholds = np.linspace(all_thresholds.min(), all_thresholds.max(), num_thresholds_to_pick)
         logging.info('thresholds %s ' % str(thresholds.shape))
 
         for t_idx,t in tqdm(enumerate(thresholds)):
