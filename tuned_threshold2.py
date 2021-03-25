@@ -209,35 +209,10 @@ if __name__ == '__main__':
             logging.info('we are picking %s' % num_thresholds_to_pick)
             from scipy.cluster.hierarchy import linkage,fcluster,fclusterdata
             from scipy.spatial.distance import squareform
-            thresholds_c_assignments = fclusterdata(candidate_thresholds, t=num_thresholds_to_pick, criterion='maxclust')
-            logging.info('thresholds_c_assignments %s ' % str(thresholds_c_assignments.shape))
-
-            # https://stackoverflow.com/questions/9362304/how-to-get-centroids-from-scipys-hierarchical-agglomerative-clustering
-            def to_codebook(X, part):
-                """
-                Calculates centroids according to flat cluster assignment
-
-                Parameters
-                ----------
-                X : array, (n, d)
-                    The n original observations with d features
-
-                part : array, (n)
-                    Partition vector. p[n]=c is the cluster assigned to observation n
-
-                Returns
-                -------
-                codebook : array, (k, d)
-                    Returns a k x d codebook with k centroids
-                """
-                codebook = []
-
-                for i in range(part.min(), part.max() + 1):
-                    codebook.append(X[part == i].mean(0))
-
-                return np.vstack(codebook)
-
-            thresholds = to_codebook(candidate_thresholds, thresholds_c_assignments)
+            from sklearn.cluster import MiniBatchKMeans
+            mkm = MiniBatchKMeans(n_clusters=num_thresholds_to_pick)
+            mkm.fit(candidate_thresholds)
+            thresholds = np.squeeze(mkm.cluster_centers_)
             logging.info('thresholds %s ' % str(thresholds.shape))
 
             Z = linkage(squareform(pairwise_distances))
