@@ -238,7 +238,7 @@ if __name__ == '__main__':
                 offset += max(fc) + 1
             return pred_clust
 
-        all_thresholds = np.vstack(all_thresholds)
+        all_thresholds = np.vstack(all_thresh)
         num_thresholds_to_pick = 50
         mkm = MiniBatchKMeans(n_clusters=num_thresholds_to_pick)
         mkm.fit(all_thresholds)
