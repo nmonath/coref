@@ -246,27 +246,25 @@ if __name__ == '__main__':
         logging.info('thresholds %s ' % str(thresholds.shape))
 
         for t_idx,t in tqdm(enumerate(thresholds)):
-            clusters = clusters_for_threshold(t)
+            predicted = clusters_for_threshold(t)
+            logging.info('Saving cluster for threshold {}'.format(t))
+            all_clusters = collections.defaultdict(list)
+            for span_id, cluster_id in enumerate(predicted):
+                all_clusters[cluster_id].append(span_id)
 
-            for i, predicted in tqdm(enumerate(clusters), desc='save'):
-                logging.info('Saving cluster for threshold {}'.format(t))
-                all_clusters = collections.defaultdict(list)
-                for span_id, cluster_id in enumerate(predicted):
-                    all_clusters[cluster_id].append(span_id)
+            if not config['use_gold_mentions']:
+                all_clusters, new_doc_ids, new_starts, new_ends = remove_nested_mentions(all_clusters, doc_ids, starts, ends)
+            else:
+                new_doc_ids, new_starts, new_ends = doc_ids, starts, ends
 
-                if not config['use_gold_mentions']:
-                    all_clusters, new_doc_ids, new_starts, new_ends = remove_nested_mentions(all_clusters, doc_ids, starts, ends)
-                else:
-                    new_doc_ids, new_starts, new_ends = doc_ids, starts, ends
+            # removing singletons
+            all_clusters = {cluster_id:mentions for cluster_id, mentions in all_clusters.items()
+                               if len(mentions) > 1}
 
-                # removing singletons
-                all_clusters = {cluster_id:mentions for cluster_id, mentions in all_clusters.items()
-                                   if len(mentions) > 1}
+            # print('Saving conll file...')
+            doc_name = 'model_{}_{}_{}_{}_{}'.format(
+                num, 'dev', config['mention_type'], config['linkage_type'], t)
 
-                # print('Saving conll file...')
-                doc_name = 'model_{}_{}_{}_{}_{}'.format(
-                    num, 'dev', config['mention_type'], config['linkage_type'], t)
-
-                write_output_file(data.documents, all_clusters, new_doc_ids, new_starts, new_ends, config['save_path'], doc_name,
-                                  topic_level=config.topic_level, corpus_level=not config.topic_level)
+            write_output_file(data.documents, all_clusters, new_doc_ids, new_starts, new_ends, config['save_path'], doc_name,
+                              topic_level=config.topic_level, corpus_level=not config.topic_level)
 
