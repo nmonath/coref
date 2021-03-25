@@ -219,14 +219,7 @@ if __name__ == '__main__':
             logging.info('Z %s ' % str(Z.shape))
             topic2tree.append((topic,Z))
             all_thresh.append(candidate_thresholds)
-            for i, t in tqdm(enumerate(thresholds),desc='fcluster'):
-                predicted_clusters = fcluster(Z, t, criterion='distance')
-                if i < len(max_ids):
-                    max_ids.append(max(predicted_clusters) + 1)
-                else:
-                    max_ids[i] = max(predicted_clusters) + 1
-                clusters.append(predicted_clusters)
-                threshold[i] = t
+
             #
             # for i, agglomerative in enumerate(clustering):
             #     predicted = agglomerative.fit(pairwise_distances)
