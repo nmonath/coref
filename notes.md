@@ -4,7 +4,7 @@ Set `partition=` for slurm
 
 ## Predicted Mentions & Gold Topics
 
-Span scorer:
+#### Span scorer:
 
 ```bash
 # slurm
@@ -13,7 +13,7 @@ sh bin/launch_span_scorer.sh configs/mixed_span_scorer1_0.40.json $partition 320
 sh bin/run_span_scorer.sh configs/mixed_span_scorer1_0.40.json
 ```
 
-Pairwise:
+#### Pairwise:
 
 ```bash
 # slurm
@@ -22,7 +22,7 @@ sh bin/launch_pairwise.sh configs/mixed_pairwise1_0.40.json $partition 32000
 sh bin/launch_pairwise.sh configs/mixed_pairwise1_0.40.json
 ```
 
-Tuning threshold:
+#### Tuning threshold:
 
 ```bash
 # slurm
@@ -51,7 +51,7 @@ Set this in [configs/mixed_clustering1_0.40_test.json](configs/mixed_clustering1
   "threshold": 0.65,
 ```
 
-Running test:
+#### Running test:
 ```bash
 # slurm
 sh bin/launch_predict.sh configs/mixed_clustering1_0.40_test.json $partition 32000
@@ -89,7 +89,7 @@ Non-coreference links: Recall: (110607 / 393377) 28.11% Precision: (110607 / 271
 
 ## Gold Mentions & Gold Topics
 
-Pairwise:
+#### Pairwise:
 
 ```bash
 # slurm
@@ -98,7 +98,7 @@ sh bin/launch_pairwise.sh configs/gold_mixed_pairwise1_0.40.json $partition 3200
 sh bin/launch_pairwise.sh configs/gold_mixed_pairwise1_0.40.json
 ```
 
-Tuning threshold:
+#### Tuning threshold:
 ```
 # slurm
 sh bin/launch_tuned_threshold.sh configs/gold_mixed_clustering1_0.40.json $partition 32000
@@ -126,7 +126,7 @@ Set this in [configs/gold_mixed_clustering1_0.40_test.json](configs/gold_mixed_c
 ```
 
 
-Running test:
+#### Running test:
 ```bash
 # slurm
 sh bin/launch_predict.sh configs/gold_mixed_clustering1_0.40_test.json $partition 32000
@@ -160,7 +160,7 @@ Non-coreference links: Recall: (324014 / 393377) 82.36% Precision: (324014 / 460
 v2 Keeps `"max_mention_span": 10,` for the span_scorer step as in the original config file.
 The remaining steps use the suggested `max_mention_span` value of 20.
 
-Span scorer:
+#### Span scorer:
 
 ```bash
 # slurm
@@ -169,7 +169,7 @@ sh bin/launch_span_scorer.sh configs/mixed_span_scorer2_0.40.json $partition 320
 sh bin/run_span_scorer.sh configs/mixed_span_scorer2_0.40.json
 ```
 
-Pairwise:
+#### Pairwise:
 
 ```bash
 # slurm
@@ -178,7 +178,7 @@ sh bin/launch_pairwise.sh configs/mixed_pairwise1_0.40.json $partition 32000
 sh bin/launch_pairwise.sh configs/mixed_pairwise1_0.40.json
 ```
 
-Tuning threshold:
+#### Tuning threshold:
 ```
 # slurm
 sh bin/launch_tuned_threshold.sh configs/mixed_clustering2_0.40.json $partition 32000
@@ -198,14 +198,14 @@ tail -1 logs/run_scorer/mixed_0.40/2021-03-07-16-51-09-190845411/log.log
 ('model_3_dev_mixed_average_0.5_topic_level.conll', 45.94354329666605)
 ```
 
-Set this in [configs/mixed_clustering2_0.40_test.json](configs/mixed_clustering2_0.40_test.json)
+#### Set this in [configs/mixed_clustering2_0.40_test.json](configs/mixed_clustering2_0.40_test.json)
 ```
   "model_num": 3,
   "threshold": 0.5
 ```
 
 
-Running test:
+#### Running test:
 ```bash
 # slurm
 sh bin/launch_predict.sh configs/mixed_clustering2_0.40_test.json $partition 32000
