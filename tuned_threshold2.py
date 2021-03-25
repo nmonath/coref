@@ -135,6 +135,9 @@ if __name__ == '__main__':
 
         doc_ids, sentence_ids, starts, ends = [], [], [], []
 
+        topic2tree = []
+        all_thresh = []
+
         for topic_num, topic in enumerate(data.topic_list):
             logging.info('Processing topic {}'.format(topic))
             docs_embeddings, docs_length = pad_and_read_bert(data.topics_bert_tokens[topic_num], bert_model)
@@ -204,26 +207,24 @@ if __name__ == '__main__':
             ends.extend(end[span_indices].tolist())
 
             candidate_thresholds = pairwise_distances.reshape(-1, 1)
-            logging.info('there are %s possible thresholds' % str(candidate_thresholds.shape))
-            num_thresholds_to_pick = 50
-            logging.info('we are picking %s' % num_thresholds_to_pick)
+
+            logging.info('topic %s are %s possible thresholds' % (topic, str(candidate_thresholds.shape)))
+
             from scipy.cluster.hierarchy import linkage,fcluster,fclusterdata
             from scipy.spatial.distance import squareform
-            from sklearn.cluster import MiniBatchKMeans
-            mkm = MiniBatchKMeans(n_clusters=num_thresholds_to_pick)
-            mkm.fit(candidate_thresholds)
-            thresholds = np.squeeze(mkm.cluster_centers_)
-            logging.info('thresholds %s ' % str(thresholds.shape))
-
             idx = np.tril_indices(pairwise_distances.shape[0], -1)
             pairwise_distances[idx] = pairwise_distances.T[idx]
             np.fill_diagonal(pairwise_distances, 0)
             Z = linkage(squareform(pairwise_distances))
             logging.info('Z %s ' % str(Z.shape))
-
+            topic2tree.append((topic,Z))
+            all_thresh.append(candidate_thresholds)
             for i, t in tqdm(enumerate(thresholds),desc='fcluster'):
                 predicted_clusters = fcluster(Z, t, criterion='distance')
-                max_ids.append(max(predicted_clusters) + 1)
+                if i < len(max_ids):
+                    max_ids.append(max(predicted_clusters) + 1)
+                else:
+                    max_ids[i] = max(predicted_clusters) + 1
                 clusters.append(predicted_clusters)
                 threshold[i] = t
             #
@@ -233,26 +234,46 @@ if __name__ == '__main__':
             #     max_ids[i] = max(predicted_clusters) + 1
             #     clusters[i].extend(predicted_clusters)
 
+        from sklearn.cluster import MiniBatchKMeans
 
-        for i, predicted in tqdm(enumerate(clusters), desc='save'):
-            logging.info('Saving cluster for threshold {}'.format(threshold[i]))
-            all_clusters = collections.defaultdict(list)
-            for span_id, cluster_id in enumerate(predicted):
-                all_clusters[cluster_id].append(span_id)
+        def clusters_for_threshold(t):
+            pred_clust = []
+            offset = 0
+            for topic, tree in topic2tree:
+                fc = fcluster(tree, t=t, criterion='distance')
+                pred_clust.extend(fc + offset)
+                offset += max(fc) + 1
+            return pred_clust
 
-            if not config['use_gold_mentions']:
-                all_clusters, new_doc_ids, new_starts, new_ends = remove_nested_mentions(all_clusters, doc_ids, starts, ends)
-            else:
-                new_doc_ids, new_starts, new_ends = doc_ids, starts, ends
+        all_thresholds = np.vstack(all_thresholds)
+        num_thresholds_to_pick = 50
+        mkm = MiniBatchKMeans(n_clusters=num_thresholds_to_pick)
+        mkm.fit(all_thresholds)
+        thresholds = np.squeeze(mkm.cluster_centers_)
+        logging.info('thresholds %s ' % str(thresholds.shape))
 
-            # removing singletons
-            all_clusters = {cluster_id:mentions for cluster_id, mentions in all_clusters.items()
-                               if len(mentions) > 1}
+        for t_idx,t in tqdm(enumerate(thresholds)):
+            clusters = clusters_for_threshold(t)
 
-            # print('Saving conll file...')
-            doc_name = 'model_{}_{}_{}_{}_{}'.format(
-                num, 'dev', config['mention_type'], config['linkage_type'], threshold[i])
+            for i, predicted in tqdm(enumerate(clusters), desc='save'):
+                logging.info('Saving cluster for threshold {}'.format(t))
+                all_clusters = collections.defaultdict(list)
+                for span_id, cluster_id in enumerate(predicted):
+                    all_clusters[cluster_id].append(span_id)
 
-            write_output_file(data.documents, all_clusters, new_doc_ids, new_starts, new_ends, config['save_path'], doc_name,
-                              topic_level=config.topic_level, corpus_level=not config.topic_level)
+                if not config['use_gold_mentions']:
+                    all_clusters, new_doc_ids, new_starts, new_ends = remove_nested_mentions(all_clusters, doc_ids, starts, ends)
+                else:
+                    new_doc_ids, new_starts, new_ends = doc_ids, starts, ends
+
+                # removing singletons
+                all_clusters = {cluster_id:mentions for cluster_id, mentions in all_clusters.items()
+                                   if len(mentions) > 1}
+
+                # print('Saving conll file...')
+                doc_name = 'model_{}_{}_{}_{}_{}'.format(
+                    num, 'dev', config['mention_type'], config['linkage_type'], t)
+
+                write_output_file(data.documents, all_clusters, new_doc_ids, new_starts, new_ends, config['save_path'], doc_name,
+                                  topic_level=config.topic_level, corpus_level=not config.topic_level)
 
