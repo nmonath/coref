@@ -218,7 +218,7 @@ if __name__ == '__main__':
             Z = linkage(squareform(pairwise_distances))
             logging.info('Z %s ' % str(Z.shape))
             topic2tree.append((topic,Z))
-            all_thresh.append(candidate_thresholds)
+            all_thresh.append(Z[:,2])
 
             #
             # for i, agglomerative in enumerate(clustering):
@@ -235,15 +235,15 @@ if __name__ == '__main__':
             for topic, tree in topic2tree:
                 fc = fcluster(tree, t=t, criterion='distance')
                 pred_clust.extend(fc + offset)
-                offset += max(fc) + 1
+                offset += np.max(fc) + 1
             return pred_clust
 
         all_thresholds = np.vstack(all_thresh)
         num_thresholds_to_pick = 50
-        # mkm = MiniBatchKMeans(n_clusters=num_thresholds_to_pick)
-        # mkm.fit(all_thresholds)
-        # thresholds = np.squeeze(mkm.cluster_centers_)
-        thresholds = np.linspace(all_thresholds.min(), all_thresholds.max(), num_thresholds_to_pick)
+        mkm = MiniBatchKMeans(n_clusters=num_thresholds_to_pick)
+        mkm.fit(all_thresholds)
+        thresholds = np.squeeze(mkm.cluster_centers_)
+        # thresholds = np.linspace(all_thresholds.min(), all_thresholds.max(), num_thresholds_to_pick)
         logging.info('thresholds %s ' % str(thresholds.shape))
 
         for t_idx,t in tqdm(enumerate(thresholds)):
