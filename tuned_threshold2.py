@@ -218,7 +218,7 @@ if __name__ == '__main__':
             Z = linkage(squareform(pairwise_distances))
             logging.info('Z %s ' % str(Z.shape))
             topic2tree.append((topic,Z))
-            all_thresh.append(Z[:,2])
+            all_thresh.append(Z[:,2][:,None])
 
             #
             # for i, agglomerative in enumerate(clustering):
